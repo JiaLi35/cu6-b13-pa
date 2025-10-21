@@ -7,6 +7,7 @@ const {
   deleteCategory,
   updateCategory,
 } = require("../controllers/category");
+const { isAdmin } = require("../middleware/roles");
 
 /* 
   query parameters for getCategories: 
@@ -33,7 +34,7 @@ router.get("/", async (req, res) => {
 
 /* ADD MIDDLEWARE FOR ADMIN ONLY ACCESS FOR THESE THREE BELOW */
 
-router.post("/", async (req, res) => {
+router.post("/", isAdmin, async (req, res) => {
   try {
     const name = req.body.name;
     const newCategory = await addCategory(name);
@@ -44,7 +45,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", isAdmin, async (req, res) => {
   try {
     const id = req.params.id;
     const name = req.body.name;
@@ -56,7 +57,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", isAdmin, async (req, res) => {
   try {
     const id = req.params.id;
     await deleteCategory(id);

@@ -16,6 +16,7 @@ const {
   deleteComment,
 } = require("../controllers/comment");
 const { isAuthorOrAdmin, isValidUser } = require("../middleware/roles");
+const { isOwnPost, isOwnComment } = require("../middleware/auth");
 
 /* POSTS routes */
 // get posts
@@ -69,7 +70,7 @@ router.post("/", isAuthorOrAdmin, async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", isOwnPost, async (req, res) => {
   try {
     const id = req.params.id;
     const { title, content, category } = req.body;
@@ -81,7 +82,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", isOwnPost, async (req, res) => {
   try {
     const id = req.params.id;
     await deletePost(id);
@@ -94,7 +95,7 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-router.put("/:id/publish", async (req, res) => {
+router.put("/:id/publish", isOwnPost, async (req, res) => {
   try {
     const id = req.params.id;
     const publishedPost = await publishPost(id);
@@ -135,7 +136,7 @@ router.post("/:postId/comments", isValidUser, async (req, res) => {
 });
 
 // edit your comment under that post
-router.put("/:postId/comments/:commentId", async (req, res) => {
+router.put("/:postId/comments/:commentId", isOwnComment, async (req, res) => {
   try {
     const commentId = req.params.commentId;
     const content = req.body.content;
@@ -148,17 +149,21 @@ router.put("/:postId/comments/:commentId", async (req, res) => {
 });
 
 // delete your comment under that post
-router.delete("/:postId/comments/:commentId", async (req, res) => {
-  try {
-    const commentId = req.params.commentId;
-    await deleteComment(commentId);
-    res.status(200).send({
-      message: `Comment with id ${commentId} has been deleted successfully`,
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(400).send({ message: error.message });
+router.delete(
+  "/:postId/comments/:commentId",
+  isOwnComment,
+  async (req, res) => {
+    try {
+      const commentId = req.params.commentId;
+      await deleteComment(commentId);
+      res.status(200).send({
+        message: `Comment with id ${commentId} has been deleted successfully`,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(400).send({ message: error.message });
+    }
   }
-});
+);
 
 module.exports = router;

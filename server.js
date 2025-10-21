@@ -32,6 +32,7 @@ app.get("/", (req, res) => {
 // INSTRUCTION: setup the routes here
 app.use("/auth", require("./routes/auth"));
 app.use("/categories", require("./routes/categories"));
+app.use("/posts", require("./routes/posts"));
 
 // start the server
 const PORT = process.env.PORT || 5123;
