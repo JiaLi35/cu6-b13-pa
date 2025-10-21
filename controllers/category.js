@@ -13,8 +13,19 @@ const Post = require("../models/post");
   name: Filter by category name
 */
 
-const getCategories = async () => {
-  const categories = await Category.find();
+const getCategories = async (name, page = 1, order = "asc", per_page = 20) => {
+  let filter = {};
+
+  if (name) {
+    filter.name = name;
+  }
+
+  const sortOrder = order === "desc" ? -1 : 1;
+
+  const categories = await Category.find(filter)
+    .limit(per_page) // limit the number of items shown
+    .skip((page - 1) * per_page) // skip the amount of items;
+    .sort({ name: sortOrder }); // sort by name (default ascending)
   return categories;
 };
 
@@ -37,7 +48,7 @@ const updateCategory = async (id, name) => {
 
 const deleteCategory = async (id) => {
   // if post with this category exists, throw an error
-  const existingPost = Post.findOne({ category: id });
+  const existingPost = await Post.findOne({ category: id });
 
   if (existingPost) {
     throw new Error("This category is still attached to a post.");

@@ -19,7 +19,11 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    const categories = await getCategories();
+    // query params
+    const name = req.query.name;
+    const page = req.query.page;
+    const order = req.query.order;
+    const categories = await getCategories(name, page, order);
     res.status(200).send(categories);
   } catch (error) {
     console.log(error);
@@ -32,7 +36,7 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const name = req.body.name;
-    const newCategory = addCategory(name);
+    const newCategory = await addCategory(name);
     res.status(200).send(newCategory);
   } catch (error) {
     console.log(error);
@@ -44,7 +48,7 @@ router.put("/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const name = req.body.name;
-    const updatedCategory = updateCategory(id, name);
+    const updatedCategory = await updateCategory(id, name);
     res.status(200).send(updatedCategory);
   } catch (error) {
     console.log(error);
