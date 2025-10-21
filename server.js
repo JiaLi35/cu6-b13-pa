@@ -30,9 +30,11 @@ app.get("/", (req, res) => {
 });
 
 // INSTRUCTION: setup the routes here
+app.use("/auth", require("./routes/auth"));
+app.use("/categories", require("./routes/categories"));
 
 // start the server
-const PORT = process.env.PORT || 5125;
+const PORT = process.env.PORT || 5123;
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
 });
