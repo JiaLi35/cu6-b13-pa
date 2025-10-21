@@ -95,7 +95,7 @@ router.delete("/:id", isOwnPost, async (req, res) => {
   }
 });
 
-router.put("/:id/publish", isOwnPost, async (req, res) => {
+router.post("/:id/publish", isOwnPost, async (req, res) => {
   try {
     const id = req.params.id;
     const publishedPost = await publishPost(id);
