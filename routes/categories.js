@@ -1,12 +1,12 @@
 /* INSTRUCTION: setup the categories router here */
 const express = require("express");
+const router = express.Router();
 const {
   getCategories,
   addCategory,
   deleteCategory,
   updateCategory,
 } = require("../controllers/category");
-const router = express.Router();
 
 /* 
   query parameters for getCategories: 

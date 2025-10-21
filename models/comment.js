@@ -23,6 +23,10 @@ const commentSchema = new Schema({
     ref: "User",
     required: true,
   },
+  created_on: {
+    type: Date,
+    default: Date.now(),
+  },
 });
 
 // comment model

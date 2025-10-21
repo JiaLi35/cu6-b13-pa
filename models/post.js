@@ -38,7 +38,7 @@ const postSchema = new Schema({
   },
   created_on: {
     type: Date,
-    default: Date.now,
+    default: Date.now(),
   },
   published_on: {
     type: Date,

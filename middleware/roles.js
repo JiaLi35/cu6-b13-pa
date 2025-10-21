@@ -33,7 +33,7 @@ const isValidUser = async (req, res, next) => {
 };
 
 // to check if the user is an author or not
-const isAuthor = async (req, res, next) => {
+const isAuthorOrAdmin = async (req, res, next) => {
   try {
     const { authorization = "" } = req.headers;
     /* step 1: extract the token from authorization header */
@@ -44,7 +44,7 @@ const isAuthor = async (req, res, next) => {
     // 3. get the user data by email
     const user = await getUserByEmail(decoded.email);
     // 4. verify if the user exists and is an admin
-    if (user && user.role === "author") {
+    if (user && (user.role === "author" || user.role === "admin")) {
       // add the user data into the request
       req.user = user;
       // trigger the next function
@@ -86,6 +86,6 @@ const isAdmin = async (req, res, next) => {
 
 module.exports = {
   isValidUser,
-  isAuthor,
+  isAuthorOrAdmin,
   isAdmin,
 };
